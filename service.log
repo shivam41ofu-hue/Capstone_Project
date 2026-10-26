@@ -1,10 +1,10 @@
-2026-10-26 09:31:09,555 INFO endpoint=/score status_code=200 latency_ms=12.75 txn_id=T800001 fraud_probability=0.0157
-2026-10-26 09:31:09,567 INFO endpoint=/score status_code=200 latency_ms=10.92 txn_id=T800002 fraud_probability=0.8755
-2026-10-26 09:31:09,579 WARNING endpoint=/score status_code=200 latency_ms=10.42 txn_id=T800003 fraud_probability=0.1550
-2026-10-26 09:31:09,581 WARNING endpoint=/score status_code=400 latency_ms=0.50 txn_id=T800004
-2026-10-26 09:31:09,583 WARNING endpoint=/score status_code=422 latency_ms=0.41
-2026-10-26 09:31:09,596 INFO endpoint=/case status_code=200 latency_ms=12.32 txn_id=T900002 fraud_probability=0.8755
-2026-10-26 09:31:09,610 WARNING endpoint=/case status_code=200 latency_ms=12.50 txn_id=T900005 fraud_probability=0.8755
-2026-10-26 09:31:09,624 ERROR endpoint=/case status_code=503 latency_ms=11.28 txn_id=T900099 fraud_probability=0.8755
-2026-10-26 09:31:09,637 INFO endpoint=/case status_code=200 latency_ms=11.76 txn_id=T800001 fraud_probability=0.0157
-2026-10-26 09:31:09,651 INFO endpoint=/case status_code=200 latency_ms=12.29 txn_id=T800006 fraud_probability=0.8755
+2026-10-26 16:25:39,399 INFO endpoint=/score status_code=200 latency_ms=15.83 txn_id=T800001 fraud_probability=0.0430
+2026-10-26 16:25:39,431 INFO endpoint=/score status_code=200 latency_ms=14.40 txn_id=T800002 fraud_probability=0.9597
+2026-10-26 16:25:39,464 WARNING endpoint=/score status_code=200 latency_ms=13.56 txn_id=T800003 fraud_probability=0.1765
+2026-10-26 16:25:39,486 WARNING endpoint=/score status_code=400 latency_ms=1.30 txn_id=T800004
+2026-10-26 16:25:39,512 WARNING endpoint=/score status_code=422 latency_ms=0.85
+2026-10-26 16:25:39,545 INFO endpoint=/case status_code=200 latency_ms=17.10 txn_id=T900002 fraud_probability=0.9597
+2026-10-26 16:25:39,585 WARNING endpoint=/case status_code=200 latency_ms=15.30 txn_id=T900005 fraud_probability=0.9597
+2026-10-26 16:25:39,636 ERROR endpoint=/case status_code=503 latency_ms=15.34 txn_id=T900099 fraud_probability=0.9597
+2026-10-26 16:25:39,668 INFO endpoint=/case status_code=200 latency_ms=13.83 txn_id=T800001 fraud_probability=0.0430
+2026-10-26 16:25:39,703 INFO endpoint=/case status_code=200 latency_ms=15.09 txn_id=T800006 fraud_probability=0.9597
