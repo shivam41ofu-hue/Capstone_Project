@@ -132,41 +132,44 @@ The over-sampled training table has 6,662 rows: 3,331 non-fraud and 3,331 fraud 
 
 ### Cross-validation and tuning
 
-| Model | Mean CV F1 | Standard deviation |
-|---|---:|---:|
-| Balanced logistic regression | 0.402 | 0.015 |
-| Untuned random forest | 0.168 | 0.048 |
-| Tuned random forest (best grid result) | 0.511 | 0.080 |
+| **Model**                              | **Mean CV F1** | **Standard deviation** |
+| -------------------------------------- | -------------- | ---------------------- |
+| Balanced logistic regression           | 0.402          | 0.015                  |
+| Untuned random forest                  | 0.453          | 0.052                  |
+| Tuned random forest (best grid result) | 0.465          | 0.042                  |
 
-The grid search tested 12 combinations across five stratified folds, using only the training split. The tuned forest CV F1 standard deviation was 0.080. The best parameters in this run were `max_depth=None` and `min_samples_leaf=5`, with `n_estimators=200`, `class_weight="balanced"` and `random_state=42` fixed. The tuned forest is selected because it had the strongest mean CV F1 in this run and the feature-importance ranking gives a useful view of the signals it uses. Its fold-to-fold stability should be considered alongside the mean, and the forest is less straightforward to explain than logistic regression because it combines many decision trees. The trade-off is reduced coefficient-level interpretability compared with logistic regression.
+
+The grid search tested 12 combinations across five stratified folds, using only the training split. The tuned forest achieved a mean CV F1 of 0.465 with a standard deviation of 0.042. The best parameters in this run were `max_depth=None` and `min_samples_leaf=5`, with `n_estimators=200`, `class_weight="balanced"` and `random_state=42` fixed. The tuned forest is selected because it had the strongest mean CV F1 in this run and the feature-importance ranking gives a useful view of the signals it uses. Its fold-to-fold stability should be considered alongside the mean, and the forest is less straightforward to explain than logistic regression because it combines many decision trees.
+
 
 ### Validation threshold table
 
-| Threshold | Precision | Recall | F1 | Payments flagged |
-|---:|---:|---:|---:|---:|
-| 0.1 | 0.140 | 0.945 | 0.244 | 492 |
-| 0.2 | 0.203 | 0.836 | 0.326 | 301 |
-| 0.3 | 0.290 | 0.699 | 0.410 | 176 |
-| 0.4 | 0.454 | 0.603 | 0.518 | 97 |
-| 0.5 | 0.518 | 0.397 | 0.450 | 56 |
-| 0.6 | 0.606 | 0.274 | 0.377 | 33 |
-| 0.7 | 0.700 | 0.192 | 0.301 | 20 |
-| 0.8 | 0.750 | 0.082 | 0.148 | 8 |
-| 0.9 | 0.000 | 0.000 | 0.000 | 0 |
+| **Threshold** | **Precision** | **Recall** | **F1** | **Payments flagged** |
+| ------------- | ------------- | ---------- | ------ | -------------------- |
+| 0.1           | 0.111         | 0.973      | 0.200  | 638                  |
+| 0.2           | 0.158         | 0.945      | 0.271  | 437                  |
+| 0.3           | 0.209         | 0.863      | 0.336  | 302                  |
+| 0.4           | 0.272         | 0.712      | 0.394  | 191                  |
+| 0.5           | 0.352         | 0.589      | 0.441  | 122                  |
+| 0.6           | 0.507         | 0.507      | 0.507  | 73                   |
+| 0.7           | 0.528         | 0.260      | 0.349  | 36                   |
+| 0.8           | 0.778         | 0.192      | 0.308  | 18                   |
+| 0.9           | 0.800         | 0.055      | 0.103  | 5                    |
 
-`t_star` is **0.3**, the highest grid threshold whose validation recall is at least 0.65 in this run (recall 0.699 at 0.3; recall 0.603 at 0.4). The final model is evaluated once on the test split at that threshold: precision 0.328, recall 0.808, F1 0.466, with TN 990, FP 121, FN 14 and TP 59; 180 payments are flagged. This corresponds to 121 / 59 = **2.05 legitimate payments held per fraud caught**, and 14 frauds missed. A stricter threshold reduces the number of held payments but also catches fewer frauds: on validation, moving from 0.3 to 0.4 reduces flags from 176 to 97 and recall from 0.699 to 0.603. The committee should treat this as a trade-off rather than a universally optimal threshold.
+
+`t_star` is **0.4**, the highest grid threshold whose validation recall is at least 0.65 in this run (recall 0.712 at 0.4; recall 0.589 at 0.5). The final model is evaluated once on the test split at that threshold: precision 0.281, recall 0.781, F1 0.413, with TN 965, FP 146, FN 16 and TP 57; 203 payments are flagged. This corresponds to 146 / 57 = **2.56 legitimate payments flagged per fraud caught**, and 16 frauds missed. A stricter threshold reduces the number of held payments but also catches fewer frauds. The committee should treat this as a trade-off rather than a universally optimal threshold.
 
 ### Leakage experiment and feature importance
 
-At threshold 0.5 on validation, the tuned clean model has F1 0.450 and the model with `chargeback_filed` added as the 27th column has F1 0.822. The higher leaky score is not a genuine improvement because chargeback status is known after settlement and would not be available at the intended decision time. It gives the model information about a later outcome and therefore cannot support a fair estimate of live fraud detection.
+At threshold 0.5 on validation, the tuned clean model has F1 0.441 and the model with `chargeback_filed` added as the 27th column has F1 0.797. The higher leaky score is not a genuine improvement because chargeback status is known after settlement and would not be available at the intended decision time. It gives the model information about a later outcome and therefore cannot support a fair estimate of live fraud detection.
 
-| Feature | Importance |
-|---|---:|
-| `amount_vs_avg_ratio` | 0.2614 |
-| `txn_count_last_24h` | 0.1634 |
-| `amount_inr` | 0.1359 |
-| `account_age_days` | 0.0845 |
-| `distance_from_home_km` | 0.0748 |
+| **Feature**             | **Importance** |
+| ----------------------- | -------------: |
+| `amount_vs_avg_ratio`   |         0.2700 |
+| `txn_count_last_24h`    |         0.1779 |
+| `amount_inr`            |         0.1339 |
+| `account_age_days`      |         0.0835 |
+| `distance_from_home_km` |         0.0709 |
 
 The top two signals align with unusual spending relative to a customer's normal amount and unusually frequent payment activity. Both can be useful risk indicators, but neither proves that an individual transaction is fraudulent.
 
